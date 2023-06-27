@@ -16,7 +16,7 @@ public abstract class UiControler : MonoBehaviour
 
     private protected virtual void onAwake() { }
 
-    private protected IEnumerator StartTransition()
+    private protected IEnumerator StartTransition(ManagerScene.Scenes scenes)
     {
         while (true)
         {
@@ -25,7 +25,7 @@ public abstract class UiControler : MonoBehaviour
 
             if (canvasGroup.alpha <= 0)
             {
-                EventBus.StartLoading(ManagerScene.Scenes.GalleryScene);
+                EventBus.StartLoading(scenes);
             }
         }
     }

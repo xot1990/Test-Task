@@ -10,7 +10,7 @@ public abstract class MonoBehaviourService<T> : MonoBehaviour where T : Componen
 
     protected void Awake()
     {
-        if (_instance != null)
+        if (FindObjectOfType<T>() != this)
         {
             DestroyImmediate(gameObject);
             return;

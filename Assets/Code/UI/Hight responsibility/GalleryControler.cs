@@ -8,25 +8,23 @@ public class GalleryControler : UiControler
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private Image backSize;
+    [SerializeField] private GameObject galleryCell;
 
     [SerializeField] private int visibleColumpCount;
     [SerializeField] private int visibleRowsCount;
-    [SerializeField] private GameObject galleryCell;
-    [SerializeField] private List<Cell> CellPoolList;
     [SerializeField] private int cellCount;
     [SerializeField] private string galleryURL;
 
+    private List<Cell> CellPoolList = new List<Cell>();
     private RectTransform content;
 
-    Vector3[] corners = new Vector3[4];
-    Vector3[] backSizeCorners = new Vector3[4];
+    private Vector3[] backSizeCorners = new Vector3[4];
     private float rectSide;
 
-    [SerializeField] private Cell lowCell;
-    [SerializeField] private Cell UpperCell;
-
-    private int upIndex;
+    private Cell lowCell;
     private int lowIndex;
+
+    private float tick = 0.1f;
 
     private protected override void onAwake()
     {
@@ -43,13 +41,16 @@ public class GalleryControler : UiControler
             Cell cell = C.GetComponent<Cell>();
             cell.id = i+1;
             CellPoolList.Add(cell);
+
+            cell.listener.OnUp += data =>
+            {
+                StartCoroutine(StartTransition(ManagerScene.Scenes.ViewScene));
+            };
         }
     }
 
     private void Start()
     {
-        upIndex = 1;
-
         backSize.rectTransform.GetWorldCorners(backSizeCorners);
 
         rectSide = 0;
@@ -65,7 +66,6 @@ public class GalleryControler : UiControler
         scrollRect.verticalScrollbar.value = 1;
 
         StartCoroutine(HideCell());
-        StartCoroutine(PoolChecker());
     }
         
 
@@ -73,7 +73,7 @@ public class GalleryControler : UiControler
     {        
         for (int i = CellPoolList.Count - 1; i >= 0; i--)
         {
-            if (CellPoolList[i].LeftMin().y < (backSizeCorners[0].y - CellPoolList[i].GetRealSize().y*3))
+            if (CellPoolList[i].LeftMin().y < (backSizeCorners[0].y - CellPoolList[i].GetRealSize().y))
             {
                 CellPoolList[i].OffLine();
             }
@@ -83,9 +83,8 @@ public class GalleryControler : UiControler
             }
         }
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.1f);
 
-        Debug.Log(backSizeCorners[0].y);
         foreach (var C in CellPoolList)
         {
             if(C.LeftMin().y < backSizeCorners[0].y)
@@ -96,44 +95,31 @@ public class GalleryControler : UiControler
         }
 
         lowCell = CellPoolList.Find(X => X.id == lowIndex);
-        UpperCell = CellPoolList.Find(X => X.id == upIndex);
     }
 
-    private IEnumerator PoolChecker()
+    
+    private void Update()
     {
-        while (true)
-        {
-            yield return new WaitForEndOfFrame();
-            if (lowCell != null && UpperCell != null && lowIndex < cellCount - visibleColumpCount && upIndex > 0)
-            {
-                if (lowCell.RightMax().y > backSizeCorners[0].y + 0.5f)
-                {
-                    for (int i = 0; i < visibleColumpCount*2; i++)
-                    {
-                        CellPoolList.Find(X => X.id == lowIndex + visibleColumpCount + i).OnLine(galleryURL);
-                    }
-
-                    for (int i = 0; i < visibleColumpCount; i++)
-                    {
-                        CellPoolList.Find(X => X.id == upIndex + i).OffLine();
-                    }
-
-                    upIndex += visibleColumpCount;
-
-                    lowIndex += visibleColumpCount;
-                    
-
-                    lowCell = CellPoolList.Find(X => X.id == lowIndex);
-                    UpperCell = CellPoolList.Find(X => X.id == upIndex);
-                    yield return new WaitForSeconds(1);
-                }
-            }
-        }
+        tick -= Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
-        
+        if (lowCell != null && lowIndex < cellCount - visibleColumpCount && tick < 0)
+        {
+            if (lowCell.LeftMin().y > backSizeCorners[0].y)
+            {
+                for (int i = 0; i < visibleColumpCount; i++)
+                {
+                    CellPoolList.Find(X => X.id == lowIndex + visibleColumpCount + i).OnLine(galleryURL);
+                }
+
+                lowIndex += visibleColumpCount;
+                lowCell = CellPoolList.Find(X => X.id == lowIndex);
+
+                tick = 0.1f;
+            }
+        }
     }
 
 

@@ -5,28 +5,31 @@ using UnityEngine.UI;
 using UnityEngine;
 
 [RequireComponent(typeof(Image))]
+[RequireComponent(typeof(GuiPointerListener))]
 public class Cell : MonoBehaviour
 {
     public int id;
-    public bool isActive;
-    private Image image;
-    private RectTransform rectTransform;
+    public bool isActive;    
 
     [SerializeField] private Image progressBar;
 
-   
+    private Image image;
+    private RectTransform rectTransform;
+    public GuiPointerListener listener;
+
+    private void OnEnable()
+    {
+        
+    }
 
     private void Awake()
     {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
+        listener = GetComponent<GuiPointerListener>();
     }
 
-    void Start()
-    {
-        
-    }
-
+    
     private IEnumerator SetIcon(UnityWebRequest unityWeb)
     {
         var asyncOperation = unityWeb.SendWebRequest();
@@ -95,4 +98,5 @@ public class Cell : MonoBehaviour
 
         return new Vector2(Mathf.Abs(F.x), Mathf.Abs(F.y));
     }
+       
 }

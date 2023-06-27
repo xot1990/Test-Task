@@ -12,7 +12,7 @@ public class MenuControler : UiControler
 
         galleryButton.OnClick += data =>
         {
-            StartCoroutine(StartTransition());
+            StartCoroutine(StartTransition(ManagerScene.Scenes.GalleryScene));
             galleryButton.enabled = false;
         };
     }    

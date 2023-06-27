@@ -1275,11 +1275,14 @@ MonoBehaviour:
   layoutGroup: {fileID: 898298090}
   scrollRect: {fileID: 1256936062}
   backSize: {fileID: 1706170529}
-  galleryCell: {fileID: 6557078364850638864, guid: 52acf317fee118940b267b9c7bb9f348, type: 3}
   visibleColumpCount: 2
   visibleRowsCount: 4
+  galleryCell: {fileID: 6557078364850638864, guid: 52acf317fee118940b267b9c7bb9f348, type: 3}
+  CellPoolList: []
   cellCount: 66
   galleryURL: http://data.ikppbb.com/test-task-unity-data/pics/
+  lowCell: {fileID: 0}
+  UpperCell: {fileID: 0}
 --- !u!1 &1706170528
 GameObject:
   m_ObjectHideFlags: 0
