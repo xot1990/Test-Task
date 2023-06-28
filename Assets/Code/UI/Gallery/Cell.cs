@@ -16,12 +16,7 @@ public class Cell : MonoBehaviour
     private Image image;
     private RectTransform rectTransform;
     public GuiPointerListener listener;
-
-    private void OnEnable()
-    {
-        
-    }
-
+    
     private void Awake()
     {
         image = GetComponent<Image>();
@@ -29,7 +24,11 @@ public class Cell : MonoBehaviour
         listener = GetComponent<GuiPointerListener>();
     }
 
-    
+    private void Start()
+    {
+        listener.enabled = false;
+    }
+
     private IEnumerator SetIcon(UnityWebRequest unityWeb)
     {
         var asyncOperation = unityWeb.SendWebRequest();
@@ -48,6 +47,7 @@ public class Cell : MonoBehaviour
                 image.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1);
                 progressBar.color = new Color(progressBar.color.r, progressBar.color.g, progressBar.color.b, 0);
+                listener.enabled = true;
                 yield break;
             }
         }
@@ -59,7 +59,7 @@ public class Cell : MonoBehaviour
 
         var www = UnityWebRequestTexture.GetTexture(url + id + ".jpg");
         StartCoroutine(SetIcon(www));
-        isActive = true;        
+        isActive = true;
     }
 
     public void OffLine()
@@ -68,6 +68,7 @@ public class Cell : MonoBehaviour
         isActive = false;
         image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
         gameObject.SetActive(false);
+        listener.enabled = false;
     }
 
     public Vector3 LeftMin()
@@ -97,6 +98,11 @@ public class Cell : MonoBehaviour
         Vector2 F = V[0] - V[2];
 
         return new Vector2(Mathf.Abs(F.x), Mathf.Abs(F.y));
+    }
+
+    public Sprite GetSprite()
+    {
+        return image.sprite;
     }
        
 }

@@ -14,6 +14,8 @@ public class GalleryControler : UiControler
     [SerializeField] private int visibleRowsCount;
     [SerializeField] private int cellCount;
     [SerializeField] private string galleryURL;
+    
+    [SerializeField] private GuiPointerListener BackButton;
 
     private List<Cell> CellPoolList = new List<Cell>();
     private RectTransform content;
@@ -29,6 +31,13 @@ public class GalleryControler : UiControler
     private protected override void onAwake()
     {
         base.onAwake();
+
+        BackButton.OnClick += data =>
+        {
+            StartCoroutine(StartTransition(ManagerScene.Scenes.MenuScene));
+            BackButton.enabled = false;
+        };
+
         lowIndex = 99;
         content = layoutGroup.GetComponent<RectTransform>();
 
@@ -42,9 +51,10 @@ public class GalleryControler : UiControler
             cell.id = i+1;
             CellPoolList.Add(cell);
 
-            cell.listener.OnUp += data =>
+            cell.listener.OnClick += data =>
             {
                 StartCoroutine(StartTransition(ManagerScene.Scenes.ViewScene));
+                ManagerScene.Get().ViewSprite = cell.GetSprite();
             };
         }
     }

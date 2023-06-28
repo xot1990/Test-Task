@@ -13,13 +13,12 @@ public class LoadingBarControler : MonoBehaviour
     }
 
     private IEnumerator Tick()
-    {
-        yield return new WaitForSeconds(1);
+    {       
 
         while(true)
         {
             yield return new WaitForEndOfFrame();
-            BackBar.fillAmount += Time.deltaTime / 2;
+            BackBar.fillAmount += Time.deltaTime;
 
             if (BackBar.fillAmount >= 1)
             {

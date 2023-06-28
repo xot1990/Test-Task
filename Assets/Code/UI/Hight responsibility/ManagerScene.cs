@@ -14,9 +14,27 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
     }
 
     private Scenes NextLoadScene;
+    private int BackScene;
+    
 
     private AsyncOperation asyncOperation;
 
+    public Sprite ViewSprite;
+
+    private void Start()
+    {
+        SceneManager.LoadScene(Scenes.LoadScene.ToString());
+    }
+
+    private void Update()
+    {
+#if UNITY_ANDROID
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            BackSceneLoad();
+        }
+#endif
+    }
 
     protected override void OnCreateService()
     {
@@ -24,6 +42,7 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
         EventBus.startLoading += SceneLoad;
 
         DontDestroyOnLoad(gameObject);
+
         NextLoadScene = Scenes.MenuScene;
     }
 
@@ -32,20 +51,37 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
         EventBus.finishLoading -= NextSceneLoad;
         EventBus.startLoading -= SceneLoad;
     }
+
+    private void BackSceneLoad()
+    {
+        NextLoadScene = GetBackScene();
+        SceneManager.LoadSceneAsync(Scenes.LoadScene.ToString());
+        
+    }
    
     private void NextSceneLoad()
     {
-        Debug.Log(NextLoadScene.ToString());
         SceneManager.LoadSceneAsync(NextLoadScene.ToString());
     }
 
     private void SceneLoad(Scenes scenes)
     {
         NextLoadScene = scenes;
-        Debug.Log("2");
         SceneManager.LoadSceneAsync(Scenes.LoadScene.ToString());
+        BackScene = SceneManager.GetActiveScene().buildIndex;
     }
     
-
+    private Scenes GetBackScene()
+    {
+        switch(BackScene)
+        {
+            case 2:
+                return Scenes.MenuScene;
+            case 3:
+                return Scenes.GalleryScene;
+            default:
+                return Scenes.MenuScene;                         
+        }
+    }
     
 }
