@@ -11,6 +11,7 @@ public abstract class UiControler : MonoBehaviour
     {
         canvasGroup = GetComponent<CanvasGroup>();
         StartCoroutine(ShowInterface());
+        SetSceneOrientation();
         onAwake();        
     }
 
@@ -40,5 +41,10 @@ public abstract class UiControler : MonoBehaviour
             if (canvasGroup.alpha >= 1)
                 yield break;
         }
+    }
+
+    private protected virtual void SetSceneOrientation()
+    {
+        Screen.orientation = ScreenOrientation.Portrait;
     }
 }

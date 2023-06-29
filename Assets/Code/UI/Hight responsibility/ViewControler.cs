@@ -29,4 +29,9 @@ public class ViewControler : UiControler
     {
         ViewImage.sprite = ManagerScene.Get().ViewSprite;
     }
+
+    private protected override void SetSceneOrientation()
+    {
+        Screen.orientation = ScreenOrientation.AutoRotation;
+    }
 }

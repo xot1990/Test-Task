@@ -10,7 +10,9 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
         LoadScene,
         MenuScene,
         ViewScene,
-        GalleryScene
+        GalleryScene,
+        CoinRotationScene,
+        RacingClabScene
     }
 
     private Scenes NextLoadScene;

@@ -6,15 +6,33 @@ using UnityEngine;
 
 public class CoinControler : UiControler
 {
-    [SerializeField] private Image ViewImage;
     [SerializeField] private GuiPointerListener BackButton;
     [SerializeField] private GuiPointerListener StartButton;
 
-    public GameObject Coin;
+    private bool isActiveRotation;
+    private IEnumerator coroutine;
+
+    public Rigidbody Coin;
 
     private protected override void onAwake()
     {
         base.onAwake();
+
+        coroutine = Rotation();
+
+        StartButton.OnClick += data =>
+        {
+            if (!isActiveRotation)
+            {
+                StartCoroutine(coroutine);
+                isActiveRotation = true;
+            }
+            else
+            {
+                isActiveRotation = false;
+                StopCoroutine(coroutine);
+            }
+        };
 
         BackButton.OnClick += data =>
         {
@@ -22,16 +40,16 @@ public class CoinControler : UiControler
             BackButton.enabled = false;
         };
     }
-
-    private void Start()
+    
+    private IEnumerator Rotation()
     {
-        SetImage();
+        while(true)
+        {
+            yield return new WaitForEndOfFrame();
+            Coin.AddTorque(new Vector3(0,20,0));
+        }
     }
-        
-    private void SetImage()
-    {
-        ViewImage.sprite = ManagerScene.Get().ViewSprite;
-    }
+     
 
     
 }
