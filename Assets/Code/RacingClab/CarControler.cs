@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CarControler : MonoBehaviour
@@ -17,55 +15,101 @@ public class CarControler : MonoBehaviour
     [SerializeField] private float force;
     [SerializeField] private float maxAngle;
 
+    public Transform cameraPos;
+
+    private bool leftRotation;
+    private bool rightRotation;
+    private bool move;
+    private bool stop;
+
     private int direction = 1;
 
     private float angle;
 
-    public void GetMove()
+    private void Update()
     {
-        FLWheelCollider.brakeTorque = 0f;
-        FRWheelCollider.brakeTorque = 0f;
+        if (stop)
+        {
+            FLWheelCollider.brakeTorque = 3000f;
+            FRWheelCollider.brakeTorque = 3000f;
+            BRWheelCollider.brakeTorque = 3000f;
+            BLWheelCollider.brakeTorque = 3000f;
+        }
+        else
+        {
+            FLWheelCollider.brakeTorque = 0f;
+            FRWheelCollider.brakeTorque = 0f;
+            BRWheelCollider.brakeTorque = 0f;
+            BLWheelCollider.brakeTorque = 0f;
+        }
 
-        FLWheelCollider.motorTorque += force * Time.fixedDeltaTime * direction;
-        FRWheelCollider.motorTorque += force * Time.fixedDeltaTime * direction;
+        if (move)
+        {
+            FLWheelCollider.motorTorque = force * direction;
+            FRWheelCollider.motorTorque = force * direction;
+        }
+        else
+        {
+            FLWheelCollider.motorTorque = 0;
+            FRWheelCollider.motorTorque = 0;
+        }
+
+        if (leftRotation)
+        {
+            angle += maxAngle * -1 * Time.fixedDeltaTime;
+            angle = Mathf.Clamp(angle, -maxAngle, maxAngle);
+
+            FLWheelCollider.steerAngle = angle;
+            FRWheelCollider.steerAngle = angle;
+        }
+
+        if (rightRotation)
+        {
+            angle += maxAngle * 1 * Time.fixedDeltaTime;
+            angle = Mathf.Clamp(angle, -maxAngle, maxAngle);
+
+            FLWheelCollider.steerAngle = angle;
+            FRWheelCollider.steerAngle = angle;
+        }
+
+        if (!leftRotation && !rightRotation)
+        {
+            angle = 0;
+            FLWheelCollider.steerAngle = 0;
+            FRWheelCollider.steerAngle = 0;
+        }
+
+        UpdateVisual();
     }
-
-    public void SwitchDirection()
+    
+    public int SwitchDirection()
     {
         if (direction == 1)
             direction = -1;
         else direction = 1;
+
+        return direction;
     }
 
-    public void GetStop()
+    public void GetMove(bool value)
     {
-        FLWheelCollider.brakeTorque = 3000f;
-        FRWheelCollider.brakeTorque = 3000f;
+        move = value;
     }
 
-    public void GetStoped()
+
+    public void GetStop(bool value)
     {
-        FLWheelCollider.motorTorque = 0;
-        FRWheelCollider.motorTorque = 0;
-
-        FLWheelCollider.brakeTorque = 200f;
-        FRWheelCollider.brakeTorque = 200f;
+        stop = value;
     }
 
-    public void GetRotation(int direction)
-    {        
-        angle += maxAngle * direction * Time.fixedDeltaTime;
-        angle = Mathf.Clamp(angle, -maxAngle, maxAngle);
-
-        FLWheelCollider.steerAngle = angle;
-        FRWheelCollider.steerAngle = angle;
-    }
-
-    public void GetZeroRotation()
+    public void GetRotationLeft(bool value)
     {
-        angle = 0;
-        FLWheelCollider.steerAngle = 0;
-        FRWheelCollider.steerAngle = 0;
+        leftRotation = value;
+    }
+
+    public void GetRotationRight(bool value)
+    {
+        rightRotation = value;
     }
 
     public void UpdateVisual()

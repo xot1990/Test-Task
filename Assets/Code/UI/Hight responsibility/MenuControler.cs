@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuControler : UiControler
@@ -7,6 +5,7 @@ public class MenuControler : UiControler
     [SerializeField] private GuiPointerListener galleryButton;
     [SerializeField] private GuiPointerListener coinRotationButton;
     [SerializeField] private GuiPointerListener racingClabButton;
+    [SerializeField] private GuiPointerListener BackButton;
 
     private protected override void onAwake()
     {
@@ -28,6 +27,11 @@ public class MenuControler : UiControler
         {
             StartCoroutine(StartTransition(ManagerScene.Scenes.RacingClabScene));
             canvasGroup.blocksRaycasts = false;
+        };
+
+        BackButton.OnClick += data =>
+        {
+            Application.Quit();
         };
     }    
 }

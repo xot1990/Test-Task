@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -12,7 +10,8 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
         ViewScene,
         GalleryScene,
         CoinRotationScene,
-        RacingClabScene
+        RacingClabScene,
+        Quit
     }
 
     private Scenes NextLoadScene;
@@ -55,10 +54,16 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
     }
 
     private void BackSceneLoad()
-    {
+    {        
         NextLoadScene = GetBackScene();
+
+        if (GetBackScene() == Scenes.Quit)
+        {
+            Application.Quit();
+            return;
+        }
+
         SceneManager.LoadSceneAsync(Scenes.LoadScene.ToString());
-        
     }
    
     private void NextSceneLoad()
@@ -69,14 +74,17 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
     private void SceneLoad(Scenes scenes)
     {
         NextLoadScene = scenes;
-        SceneManager.LoadSceneAsync(Scenes.LoadScene.ToString());
-        BackScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadSceneAsync(Scenes.LoadScene.ToString());        
     }
     
     private Scenes GetBackScene()
     {
-        switch(BackScene)
+        BackScene = SceneManager.GetActiveScene().buildIndex;
+
+        switch (BackScene)
         {
+            case 1:
+                return Scenes.Quit;
             case 2:
                 return Scenes.MenuScene;
             case 3:
@@ -84,6 +92,12 @@ public class ManagerScene : MonoBehaviourService<ManagerScene>
             default:
                 return Scenes.MenuScene;                         
         }
+    }
+
+    public void ResetCurrentScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
     }
     
 }

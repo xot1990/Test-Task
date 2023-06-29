@@ -10,6 +10,7 @@ public class LoadingBarControler : MonoBehaviour
     void Start()
     {
         StartCoroutine(Tick());
+        Screen.orientation = ScreenOrientation.Portrait;
     }
 
     private IEnumerator Tick()

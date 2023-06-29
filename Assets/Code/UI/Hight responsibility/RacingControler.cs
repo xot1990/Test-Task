@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -11,6 +9,13 @@ public class RacingControler : UiControler
     [SerializeField] private GuiPointerListener GasButton;
     [SerializeField] private GuiPointerListener StopButton;
     [SerializeField] private GuiPointerListener BackButton;
+    [SerializeField] private GuiPointerListener MoveDirButton;
+    [SerializeField] private GuiPointerListener ResetButton;
+
+    [SerializeField] private GameObject cameraObj;
+
+    [SerializeField] private Sprite moveForward;
+    [SerializeField] private Sprite moveBackward;
 
     [SerializeField] private CarControler car;
 
@@ -30,70 +35,71 @@ public class RacingControler : UiControler
             StartCoroutine(StartTransition(ManagerScene.Scenes.MenuScene));
             BackButton.enabled = false;
         };
+
+        ResetButton.OnClick += data =>
+        {
+            ManagerScene.Get().ResetCurrentScene();
+        };
     }
 
-
-    private void FixedUpdate()
+    private void Update()
     {
-        if(isRotateLeft)
-            car.GetRotation(-1);
+        cameraObj.transform.position = car.cameraPos.position;
+        cameraObj.transform.rotation = car.cameraPos.rotation;
+    }
 
-        if (isRotateRight)
-            car.GetRotation(1);
-
-        if(!isRotateLeft && !isRotateRight)
-            car.GetZeroRotation();
-
-        if (isMove)
-            car.GetMove();
-        else car.GetStoped();
-
-        if(isStop)
-            car.GetStop();
-
-        car.UpdateVisual();
+    private protected override void SetSceneOrientation()
+    {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
     }
 
     private void SetControls()
     {
+        MoveDirButton.OnClick += data =>
+        {
+            if (car.SwitchDirection() == 1)
+                MoveDirButton.GetComponent<Image>().sprite = moveForward;
+            else MoveDirButton.GetComponent<Image>().sprite = moveBackward;
+        };
+
         leftArrow.OnDown += data =>
         {
-            isRotateLeft = true;
+            car.GetRotationLeft(true);
         };
 
         rightArrow.OnDown += data =>
         {
-            isRotateRight = true;
+            car.GetRotationRight(true);
         };
 
         GasButton.OnDown += data =>
         {
-            isMove = true;
+            car.GetMove(true);
         };
 
         StopButton.OnDown += data =>
         {
-            isStop = true;
+            car.GetStop(true);
         };
 
         leftArrow.OnUp += data =>
         {
-            isRotateLeft = false;
+            car.GetRotationLeft(false);
         };
 
         rightArrow.OnUp += data =>
         {
-            isRotateRight = false;
+            car.GetRotationRight(false);
         };
 
         GasButton.OnUp += data =>
         {
-            isMove = false;
+            car.GetMove(false);
         };
 
         StopButton.OnUp += data =>
         {
-            isStop = false;
+            car.GetStop(false);
         };
 
     }

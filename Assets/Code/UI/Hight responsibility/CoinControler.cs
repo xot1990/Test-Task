@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
-
 
 public class CoinControler : UiControler
 {
@@ -49,7 +46,4 @@ public class CoinControler : UiControler
             Coin.AddTorque(new Vector3(0,20,0));
         }
     }
-     
-
-    
 }

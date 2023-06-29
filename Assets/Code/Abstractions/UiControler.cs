@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CanvasGroup))]
@@ -26,6 +25,9 @@ public abstract class UiControler : MonoBehaviour
 
             if (canvasGroup.alpha <= 0)
             {
+                if (scenes == ManagerScene.Scenes.Quit)
+                    Application.Quit();
+
                 EventBus.StartLoading(scenes);
             }
         }

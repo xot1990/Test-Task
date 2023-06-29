@@ -1107,6 +1107,7 @@ MonoBehaviour:
   galleryButton: {fileID: 1060102689}
   coinRotationButton: {fileID: 1562199012}
   racingClabButton: {fileID: 60076507}
+  BackButton: {fileID: 1979046754}
 --- !u!1 &1979046750
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1119,7 @@ GameObject:
   - component: {fileID: 1979046751}
   - component: {fileID: 1979046753}
   - component: {fileID: 1979046752}
+  - component: {fileID: 1979046754}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -1183,3 +1185,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1979046750}
   m_CullTransparentMesh: 1
+--- !u!114 &1979046754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979046750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c138810b4f11b34f82256e4e8b589a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
